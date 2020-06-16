@@ -19,15 +19,12 @@
 		grid-template-columns: 1fr 1fr;
 	}
 	#page-search-results main .card img{
-		height: 250px;
+		height: 200px;
 	}
 }
 @media (max-width: 500px) {
 	#page-search-results .cards{
 		grid-template-columns: 1fr;
-	}
-	#page-search-results main .card img{
-		height: 200px;
 	}
 }
 
