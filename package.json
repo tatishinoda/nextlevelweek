@@ -1,0 +1,25 @@
+{
+  "name": "nextlevelweek",
+  "version": "1.0.0",
+  "description": "Códigos desenvolvidos durante a NextLevelWeek da Rocketseat na turma Starter",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "nodemon src/server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tatishinoda/nextlevelweek.git"
+  },
+  "keywords": [],
+  "author": "Tatiane Gabrielle",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tatishinoda/nextlevelweek/issues"
+  },
+  "homepage": "https://github.com/tatishinoda/nextlevelweek#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.4",
+    "nunjucks": "^3.2.1"
+  }
+}
