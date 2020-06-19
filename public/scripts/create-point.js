@@ -67,7 +67,7 @@ let selectedItems =[]
 		//se tiver selecionado, tirar a seleção
 		if (alreadySelected >= 0){
 			//tirar seleção
-			const filteredItems = selectedItems.filter(item =>{
+			const filteredItems = selectedItems.filter(item =>{ 
 				const itemIsDifferent = item != itemId
 				return itemIsDifferent
 			})
