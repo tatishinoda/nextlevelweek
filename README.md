@@ -32,8 +32,3 @@ Este projeto foi desenvolvido durante o mês de Junho/2020 como parte da Next Le
 ## Layout
 
 Você pode visualizar o layout fornecido [nesse link](<https://www.figma.com/file/Byw4X5etg8VCmezueyhzkC/Ecoleta-(Starter)?node-id=136%3A546>).
-
-
-## Licença
-
-Esse projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE.md) para mais detalhes.
