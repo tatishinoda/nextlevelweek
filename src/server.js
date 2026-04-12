@@ -96,11 +96,11 @@ server.get("/search", (req,res) => {
 						console.error("Erro ao buscar:", err)
 						return res.status(500).send("Erro ao buscar: " + err.message)
 					}
-					
+
 					if (!rows) {
 						return res.render("search-results.html", {total: 0})
 					}
-					
+
 					const total = rows.length
 					//mostrar html com os dados do BD
 					return res.render("search-results.html", {places : rows, total: total})
@@ -133,7 +133,7 @@ db.serialize(() => {
 			process.exit(1) // Sair se não conseguir criar a tabela
 		} else {
 			console.log("Tabela places criada/verificada com sucesso")
-			
+
 			// Só iniciar o servidor após a tabela estar pronta
 			server.listen(PORT, () => {
 				console.log(`Servidor rodando na porta ${PORT}`)
