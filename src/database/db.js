@@ -6,7 +6,18 @@ const path = require("path")
 // Usar /tmp no Vercel (dados temporários) ou arquivo local em desenvolvimento
 const dbPath = process.env.VERCEL ? '/tmp/database.db' : path.join(__dirname, 'database.db')
 
-const db = new sqlite3.Database(dbPath)
+const db = new sqlite3.Database(dbPath, (err) => {
+	if (err) {
+		console.error("Erro ao conectar ao banco de dados:", err.message)
+	} else {
+		console.log("Conectado ao banco de dados SQLite em:", dbPath)
+	}
+})
+
+// Habilitar foreign keys (boa prática)
+db.run("PRAGMA foreign_keys = ON", (err) => {
+	if (err) console.error("Erro ao habilitar foreign keys:", err)
+})
 
 module.exports = db
 //utilizar o objeto db para operações
