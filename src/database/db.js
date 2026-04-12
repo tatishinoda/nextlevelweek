@@ -1,11 +1,14 @@
 //importar dependencia sqlite3
 const sqlite3 = require("sqlite3").verbose()
+const path = require("path")
 
 //criar objeto que faz as operações no db
+// Usar /tmp no Vercel (dados temporários) ou arquivo local em desenvolvimento
+const dbPath = process.env.VERCEL ? '/tmp/database.db' : path.join(__dirname, 'database.db')
 
-const db = new sqlite3.Database ("./src/database/database.db")
+const db = new sqlite3.Database(dbPath)
 
-module.exports = db 
+module.exports = db
 //utilizar o objeto db para operações
 
 // db.serialize( ()=> {

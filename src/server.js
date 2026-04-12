@@ -35,12 +35,12 @@ server.get("/create-point", (req,res) => {
 })
 
 server.post("/savepoint", (req,res)=>{
-	
+
 	//req.pody - corpo do formulário
 	//console.log(req.body)
 
 
-	//inserir os dados no BD 
+	//inserir os dados no BD
 		//inserir na tabela
 		const query = `
 				INSERT INTO places (
@@ -78,7 +78,7 @@ server.post("/savepoint", (req,res)=>{
 })
 
 server.get("/search", (req,res) => {
-	
+
 	const search = req.query.search
 	if(search == ""){
 		//pesquisa vazia
@@ -95,8 +95,29 @@ server.get("/search", (req,res) => {
 
 				//mostrar html com os dados do BD
 				return res.render("search-results.html", {places : rows, total: total})
-			})	
+			})
 })
 
 //ligar o servidor
-server.listen(3000)
+const PORT = process.env.PORT || 3000
+server.listen(PORT, () => {
+	console.log(`Servidor rodando na porta ${PORT}`)
+})
+
+// Criar tabela automaticamente se não existir
+db.serialize(() => {
+	db.run(`
+		CREATE TABLE IF NOT EXISTS places (
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			image TEXT,
+			name TEXT,
+			address TEXT,
+			address2 TEXT,
+			state TEXT,
+			city TEXT,
+			items TEXT
+		);
+	`)
+})
+
+module.exports = server
