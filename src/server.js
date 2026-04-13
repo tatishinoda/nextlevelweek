@@ -3,8 +3,12 @@ const path = require("path")
 const server = express()
 
 
-// peger o bd
+// pegar o bd
 const db = require("./database/db.js")
+
+// Inicializar banco com dados
+const seedDatabase = require("./database/seed.js")
+seedDatabase()
 
 //confg pasta publica
 server.use(express.static(path.join(__dirname, "../public")))
@@ -86,7 +90,7 @@ server.get("/search", (req,res) => {
 	try {
 		const search = req.query.search
 		console.log("Busca recebida:", search)
-		
+
 		if(search == ""){
 			//pesquisa vazia
 			//mostrar html com os dados do BD
@@ -97,7 +101,7 @@ server.get("/search", (req,res) => {
 		const query = `SELECT * FROM places`
 		const stmt = db.prepare(query)
 		const allRows = stmt.all()
-		
+
 		console.log("Total de registros no BD:", allRows.length)
 		console.log("Registros:", allRows)
 
