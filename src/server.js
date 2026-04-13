@@ -72,6 +72,14 @@ server.post("/savepoint", (req,res)=>{
 	}
 })
 
+//função para normalizar string (remover acentos, converter para minúsculas)
+function normalizarString(str) {
+	return str
+		.toLowerCase()
+		.normalize('NFD')
+		.replace(/[\u0300-\u036f]/g, '')
+}
+
 server.get("/search", (req,res) => {
 
 	try {
@@ -82,11 +90,18 @@ server.get("/search", (req,res) => {
 			return res.render("search-results.html", {total: 0})
 		}
 
-		//pegar os dados do BD
-		//% indica que aceita qualquer coisa que vier antes ou depois
-		const query = `SELECT * FROM places WHERE city LIKE ?`
+		//pegar todos os dados do BD
+		const query = `SELECT * FROM places`
 		const stmt = db.prepare(query)
-		const rows = stmt.all(`%${search}%`)
+		const allRows = stmt.all()
+
+		//normalizar o termo de busca
+		const searchNormalizado = normalizarString(search)
+
+		//filtrar resultados que combinam com a busca normalizada
+		const rows = allRows.filter(place => 
+			normalizarString(place.city).includes(searchNormalizado)
+		)
 
 		if (!rows || rows.length === 0) {
 			return res.render("search-results.html", {total: 0})
