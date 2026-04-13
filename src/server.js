@@ -41,42 +41,33 @@ server.post("/savepoint", (req,res)=>{
 
 	try {
 		//inserir os dados no BD
-			//inserir na tabela
-			const query = `
-					INSERT INTO places (
-						image,
-						name,
-						address,
-						address2,
-						state,
-						city,
-						items
-					) VALUES (?,?,?,?,?,?,?);	`
-			const values = [
-				req.body.image,
-				req.body.name,
-				req.body.address,
-				req.body.address2,
-				req.body.state,
-				req.body.city,
-				req.body.items
-			]
+		const query = `
+			INSERT INTO places (
+				image,
+				name,
+				address,
+				address2,
+				state,
+				city,
+				items
+			) VALUES (?,?,?,?,?,?,?);	`
 
-		//depois de enviar os dados, ele exibe o resultado
-		function afterInsertData(err){
-			if(err){
-				console.error("Erro ao inserir:", err)
-				return res.status(500).send("Erro no Cadastro: " + err.message)
-			}
-			console.log("Cadastrado com sucesso")
-			//Retorna somente depois do cadastro
-			return res.render("create-point.html", {saved:true})
-		}
+		const stmt = db.prepare(query)
+		stmt.run(
+			req.body.image,
+			req.body.name,
+			req.body.address,
+			req.body.address2,
+			req.body.state,
+			req.body.city,
+			req.body.items
+		)
 
-		db.run(query, values, afterInsertData)
+		console.log("Cadastrado com sucesso")
+		return res.render("create-point.html", {saved:true})
 	} catch (error) {
 		console.error("Erro em /savepoint:", error)
-		res.status(500).send("Erro no servidor")
+		res.status(500).send("Erro no Cadastro: " + error.message)
 	}
 })
 
@@ -89,25 +80,23 @@ server.get("/search", (req,res) => {
 			//mostrar html com os dados do BD
 			return res.render("search-results.html", {total: 0})
 		}
+
 		//pegar os dados do BD
 		//% indica que aceita qualquer coisa que vier antes ou depois
-		db.all(`SELECT * FROM places WHERE city LIKE '%${search}%'`, function(err, rows){
-					if(err){
-						console.error("Erro ao buscar:", err)
-						return res.status(500).send("Erro ao buscar: " + err.message)
-					}
+		const query = `SELECT * FROM places WHERE city LIKE ?`
+		const stmt = db.prepare(query)
+		const rows = stmt.all(`%${search}%`)
 
-					if (!rows) {
-						return res.render("search-results.html", {total: 0})
-					}
+		if (!rows || rows.length === 0) {
+			return res.render("search-results.html", {total: 0})
+		}
 
-					const total = rows.length
-					//mostrar html com os dados do BD
-					return res.render("search-results.html", {places : rows, total: total})
-				})
+		const total = rows.length
+		//mostrar html com os dados do BD
+		return res.render("search-results.html", {places : rows, total: total})
 	} catch (error) {
 		console.error("Erro em /search:", error)
-		res.status(500).send("Erro no servidor")
+		res.status(500).send("Erro ao buscar: " + error.message)
 	}
 })
 
@@ -115,8 +104,8 @@ server.get("/search", (req,res) => {
 const PORT = process.env.PORT || 3000
 
 // Garantir que a tabela existe antes de ouvir requisições
-db.serialize(() => {
-	db.run(`
+try {
+	db.exec(`
 		CREATE TABLE IF NOT EXISTS places (
 			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			image TEXT,
@@ -127,20 +116,18 @@ db.serialize(() => {
 			city TEXT,
 			items TEXT
 		);
-	`, (err) => {
-		if (err) {
-			console.error("Erro ao criar tabela:", err)
-			process.exit(1) // Sair se não conseguir criar a tabela
-		} else {
-			console.log("Tabela places criada/verificada com sucesso")
+	`)
 
-			// Só iniciar o servidor após a tabela estar pronta
-			server.listen(PORT, () => {
-				console.log(`Servidor rodando na porta ${PORT}`)
-			})
-		}
+	console.log("Tabela places criada/verificada com sucesso")
+
+	// Iniciar o servidor
+	server.listen(PORT, () => {
+		console.log(`Servidor rodando na porta ${PORT}`)
 	})
-})
+} catch (err) {
+	console.error("Erro ao criar tabela:", err)
+	process.exit(1) // Sair se não conseguir criar a tabela
+}
 
 // Tratamento global de erros não capturados
 process.on('uncaughtException', (error) => {

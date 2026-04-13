@@ -1,23 +1,15 @@
-//importar dependencia sqlite3
-const sqlite3 = require("sqlite3").verbose()
+//importar dependencia better-sqlite3
+const Database = require("better-sqlite3")
 const path = require("path")
 
 //criar objeto que faz as operações no db
 // Usar /tmp no Vercel (dados temporários) ou arquivo local em desenvolvimento
 const dbPath = process.env.VERCEL ? '/tmp/database.db' : path.join(__dirname, 'database.db')
 
-const db = new sqlite3.Database(dbPath, (err) => {
-	if (err) {
-		console.error("Erro ao conectar ao banco de dados:", err.message)
-	} else {
-		console.log("Conectado ao banco de dados SQLite em:", dbPath)
-	}
-})
+const db = new Database(dbPath)
 
 // Habilitar foreign keys (boa prática)
-db.run("PRAGMA foreign_keys = ON", (err) => {
-	if (err) console.error("Erro ao habilitar foreign keys:", err)
-})
+db.pragma('foreign_keys = ON')
 
 module.exports = db
 //utilizar o objeto db para operações
