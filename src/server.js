@@ -74,6 +74,7 @@ server.post("/savepoint", (req,res)=>{
 
 //função para normalizar string (remover acentos, converter para minúsculas)
 function normalizarString(str) {
+	if (!str) return ''
 	return str
 		.toLowerCase()
 		.normalize('NFD')
@@ -84,6 +85,8 @@ server.get("/search", (req,res) => {
 
 	try {
 		const search = req.query.search
+		console.log("Busca recebida:", search)
+		
 		if(search == ""){
 			//pesquisa vazia
 			//mostrar html com os dados do BD
@@ -94,14 +97,23 @@ server.get("/search", (req,res) => {
 		const query = `SELECT * FROM places`
 		const stmt = db.prepare(query)
 		const allRows = stmt.all()
+		
+		console.log("Total de registros no BD:", allRows.length)
+		console.log("Registros:", allRows)
 
 		//normalizar o termo de busca
 		const searchNormalizado = normalizarString(search)
+		console.log("Busca normalizada:", searchNormalizado)
 
 		//filtrar resultados que combinam com a busca normalizada
-		const rows = allRows.filter(place => 
-			normalizarString(place.city).includes(searchNormalizado)
-		)
+		const rows = allRows.filter(place => {
+			const cityNormalizada = normalizarString(place.city)
+			const match = cityNormalizada.includes(searchNormalizado)
+			console.log(`Comparando "${place.city}" (${cityNormalizada}) com "${searchNormalizado}": ${match}`)
+			return match
+		})
+
+		console.log("Resultados encontrados:", rows.length)
 
 		if (!rows || rows.length === 0) {
 			return res.render("search-results.html", {total: 0})
