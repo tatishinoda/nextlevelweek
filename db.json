@@ -1,0 +1,64 @@
+{
+  "places": [
+    {
+      "id": 1,
+      "image": "https://images.unsplash.com/photo-1555606090-1640be5631c5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1225&q=80",
+      "name": "Papersider",
+      "address": "Guilherme Gemballa, Jardim América",
+      "address2": "Nº 260",
+      "state": "Santa Catarina",
+      "city": "Rio do Sul",
+      "items": "Resíduos Eletronicos, Lâmpadas"
+    },
+    {
+      "id": 2,
+      "image": "https://images.unsplash.com/photo-1567393528677-d6adae7d4a0a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "name": "Colectoria",
+      "address": "rua 123",
+      "address2": "numer0 30",
+      "state": "Espírito Santo",
+      "city": "Cariacica",
+      "items": "Papéis e Papelão,Resíduos Orgânicos"
+    },
+    {
+      "id": 3,
+      "image": "https://images.unsplash.com/photo-1567393528677-d6adae7d4a0a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "name": "Nome1",
+      "address": "rua aaaa",
+      "address2": "1234",
+      "state": "Roraima",
+      "city": "Bonfim",
+      "items": "Lâmpadas"
+    },
+    {
+      "id": 4,
+      "image": "https://images.unsplash.com/photo-1567393528677-d6adae7d4a0a?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60",
+      "name": "Tati",
+      "address": "rua blah",
+      "address2": "124",
+      "state": "Rio de Janeiro",
+      "city": "Aperibé",
+      "items": "Lâmpadas,Resíduos Eletronicos"
+    },
+    {
+      "id": 5,
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX06S-7Qsp8SkR4OEp8Bkj9uR_Y0vLR9xHlSAgpCpbOuvx0ftZ4z9TxjQiutiZ0nY8uLGlyx6G-Z4xGLXRo7JWuM6xwfyW-v1dz7GmsOQuMng&s=10",
+      "name": "Teste",
+      "address": "rua 1234",
+      "address2": "21",
+      "state": "São Paulo",
+      "city": "São Paulo",
+      "items": "Pilhas e Baterias,Lâmpadas"
+    },
+    {
+      "image": "data:image/jpeg;base64,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",
+      "name": "Teste 123",
+      "address": "teste 123",
+      "address2": "2222",
+      "state": "São Paulo",
+      "city": "São Paulo",
+      "items": "Lâmpadas,Resíduos Eletronicos,Resíduos Orgânicos",
+      "id": 6
+    }
+  ]
+}

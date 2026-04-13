@@ -1,15 +1,68 @@
-//importar dependencia better-sqlite3
-const Database = require("better-sqlite3")
-const path = require("path")
+// Configuração do json-server
+//
+// O json-server roda em uma porta diferente para não conflitar com o servidor Express
+// Use este arquivo para fazer requisições ao json-server
 
-//criar objeto que faz as operações no db
-// Usar /tmp no Vercel (dados temporários) ou arquivo local em desenvolvimento
-const dbPath = process.env.VERCEL ? '/tmp/database.db' : path.join(__dirname, 'database.db')
+const axios = require('axios')
 
-const db = new Database(dbPath)
+const JSON_SERVER_URL = process.env.JSON_SERVER_URL || 'http://localhost:3001'
 
-// Habilitar foreign keys (boa prática)
-db.pragma('foreign_keys = ON')
+const db = {
+	// GET - buscar todos os registros de uma tabela
+	async getAll(resource) {
+		try {
+			const response = await axios.get(`${JSON_SERVER_URL}/${resource}`)
+			return response.data
+		} catch (error) {
+			console.error(`Erro ao buscar ${resource}:`, error.message)
+			return []
+		}
+	},
+
+	// GET - buscar um registro por ID
+	async getById(resource, id) {
+		try {
+			const response = await axios.get(`${JSON_SERVER_URL}/${resource}/${id}`)
+			return response.data
+		} catch (error) {
+			console.error(`Erro ao buscar ${resource} com ID ${id}:`, error.message)
+			return null
+		}
+	},
+
+	// POST - criar um novo registro
+	async create(resource, data) {
+		try {
+			const response = await axios.post(`${JSON_SERVER_URL}/${resource}`, data)
+			return response.data
+		} catch (error) {
+			console.error(`Erro ao criar ${resource}:`, error.message)
+			throw error
+		}
+	},
+
+	// PUT - atualizar um registro completo
+	async update(resource, id, data) {
+		try {
+			const response = await axios.put(`${JSON_SERVER_URL}/${resource}/${id}`, data)
+			return response.data
+		} catch (error) {
+			console.error(`Erro ao atualizar ${resource}:`, error.message)
+			throw error
+		}
+	},
+
+	// DELETE - deletar um registro
+	async delete(resource, id) {
+		try {
+			await axios.delete(`${JSON_SERVER_URL}/${resource}/${id}`)
+			return true
+		} catch (error) {
+			console.error(`Erro ao deletar ${resource}:`, error.message)
+			throw error
+		}
+	}
+}
 
 module.exports = db
 //utilizar o objeto db para operações
