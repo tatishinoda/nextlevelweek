@@ -101,10 +101,7 @@ server.get("/search", (req,res) => {
 	}
 })
 
-//ligar o servidor
-const PORT = process.env.PORT || 3000
-
-// Garantir que a tabela existe antes de ouvir requisições
+// Garantir que a tabela existe
 try {
 	db.exec(`
 		CREATE TABLE IF NOT EXISTS places (
@@ -118,26 +115,27 @@ try {
 			items TEXT
 		);
 	`)
-
 	console.log("Tabela places criada/verificada com sucesso")
-
-	// Iniciar o servidor
-	server.listen(PORT, () => {
-		console.log(`Servidor rodando na porta ${PORT}`)
-	})
 } catch (err) {
 	console.error("Erro ao criar tabela:", err)
-	process.exit(1) // Sair se não conseguir criar a tabela
 }
 
 // Tratamento global de erros não capturados
 process.on('uncaughtException', (error) => {
 	console.error('Uncaught Exception:', error)
-	// Log mas não saia para evitar que o processo crash complete
 })
 
 process.on('unhandledRejection', (reason, promise) => {
 	console.error('Unhandled Rejection at:', promise, 'reason:', reason)
 })
 
+// Exportar para Vercel (serverless)
 module.exports = server
+
+// Se é ambiente local, escutar em porta
+if (process.env.NODE_ENV !== 'production') {
+	const PORT = process.env.PORT || 3000
+	server.listen(PORT, () => {
+		console.log(`Servidor rodando na porta ${PORT}`)
+	})
+}
