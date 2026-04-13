@@ -2,8 +2,7 @@ const express = require("express")
 const path = require("path")
 const server = express()
 
-
-// pegar o bd
+// pegar o db (agora usando json-server)
 const db = require("./database/db.js")
 
 // Inicializar banco com dados
@@ -39,34 +38,24 @@ server.get("/create-point", (req,res) => {
 	return res.render("create-point.html")
 })
 
-server.post("/savepoint", (req,res)=>{
-
-	//req.pody - corpo do formulário
+server.post("/savepoint", async (req,res)=>{
+	//req.body - corpo do formulário
 	//console.log(req.body)
 
 	try {
-		//inserir os dados no BD
-		const query = `
-			INSERT INTO places (
-				image,
-				name,
-				address,
-				address2,
-				state,
-				city,
-				items
-			) VALUES (?,?,?,?,?,?,?);	`
+		// criar novo ponto de coleta
+		const newPlace = {
+			image: req.body.image,
+			name: req.body.name,
+			address: req.body.address,
+			address2: req.body.address2,
+			state: req.body.state,
+			city: req.body.city,
+			items: req.body.items
+		}
 
-		const stmt = db.prepare(query)
-		stmt.run(
-			req.body.image,
-			req.body.name,
-			req.body.address,
-			req.body.address2,
-			req.body.state,
-			req.body.city,
-			req.body.items
-		)
+		//inserir os dados no banco usando json-server
+		await db.create('places', newPlace)
 
 		console.log("Cadastrado com sucesso")
 		return res.render("create-point.html", {saved:true})
@@ -85,8 +74,7 @@ function normalizarString(str) {
 		.replace(/[\u0300-\u036f]/g, '')
 }
 
-server.get("/search", (req,res) => {
-
+server.get("/search", async (req,res) => {
 	try {
 		const search = req.query.search
 		console.log("Busca recebida:", search)
@@ -98,9 +86,7 @@ server.get("/search", (req,res) => {
 		}
 
 		//pegar todos os dados do BD
-		const query = `SELECT * FROM places`
-		const stmt = db.prepare(query)
-		const allRows = stmt.all()
+		const allRows = await db.getAll('places')
 
 		console.log("Total de registros no BD:", allRows.length)
 		console.log("Registros:", allRows)
@@ -132,25 +118,6 @@ server.get("/search", (req,res) => {
 	}
 })
 
-// Garantir que a tabela existe
-try {
-	db.exec(`
-		CREATE TABLE IF NOT EXISTS places (
-			id INTEGER PRIMARY KEY AUTOINCREMENT,
-			image TEXT,
-			name TEXT,
-			address TEXT,
-			address2 TEXT,
-			state TEXT,
-			city TEXT,
-			items TEXT
-		);
-	`)
-	console.log("Tabela places criada/verificada com sucesso")
-} catch (err) {
-	console.error("Erro ao criar tabela:", err)
-}
-
 // Tratamento global de erros não capturados
 process.on('uncaughtException', (error) => {
 	console.error('Uncaught Exception:', error)
@@ -160,13 +127,5 @@ process.on('unhandledRejection', (reason, promise) => {
 	console.error('Unhandled Rejection at:', promise, 'reason:', reason)
 })
 
-// Exportar para Vercel (serverless)
+// Exportar servidor
 module.exports = server
-
-// Se é ambiente local, escutar em porta
-if (process.env.NODE_ENV !== 'production') {
-	const PORT = process.env.PORT || 3000
-	server.listen(PORT, () => {
-		console.log(`Servidor rodando na porta ${PORT}`)
-	})
-}

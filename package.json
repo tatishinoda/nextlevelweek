@@ -2,9 +2,10 @@
    "name": "nextlevelweek",
    "version": "1.0.0",
    "description": "Códigos desenvolvidos durante a NextLevelWeek da Rocketseat na turma Starter",
-   "main": "src/server.js",
+   "main": "src/index.js",
    "scripts": {
-      "start": "nodemon src/server.js"
+      "start": "node src/index.js",
+      "dev": "concurrently \"nodemon src/index.js\" \"json-server --watch db.json --port 3001\""
    },
    "repository": {
       "type": "git",
@@ -18,9 +19,11 @@
    },
    "homepage": "https://github.com/tatishinoda/nextlevelweek#readme",
    "dependencies": {
-      "better-sqlite3": "^12.9.0",
+      "axios": "^1.6.2",
+      "concurrently": "^8.2.2",
       "express": "^4.22.1",
-      "nodemon": "^2.0.20",
+      "json-server": "^0.17.4",
+      "nodemon": "^3.1.14",
       "nunjucks": "^3.2.4"
    }
 }
