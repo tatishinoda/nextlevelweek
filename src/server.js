@@ -1,4 +1,5 @@
 const express = require("express")
+const path = require("path")
 const server = express()
 
 
@@ -6,14 +7,14 @@ const server = express()
 const db = require("./database/db.js")
 
 //confg pasta publica
-server.use(express.static("public"))
+server.use(express.static(path.join(__dirname, "../public")))
 
 //habilitar req.body na app
 server.use(express.urlencoded({ extended: true}))
 
 //Template engine
 const nunjucks = require("nunjucks")
-nunjucks.configure("src/views", {
+nunjucks.configure(path.join(__dirname, "views"), {
 	express: server,
 	noCache: true
 })
