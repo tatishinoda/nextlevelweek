@@ -95,7 +95,6 @@ nextlevelweek/
 ├── public/
 │   ├── assets/                  # Imagens
 │   └── styles/                  # Arquivos CSS
-├── api/                         # [REMOVIDO] Configurações da Vercel
 ├── db.json                      # Banco de dados (json-server)
 ├── package.json
 └── README.md
