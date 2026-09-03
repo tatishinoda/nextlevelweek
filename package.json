@@ -21,8 +21,8 @@
    "dependencies": {
       "axios": "^1.16.0",
       "concurrently": "^8.2.2",
-      "express": "^4.22.2",
-      "json-server": "^0.17.4",
+      "express": "^5.2.1",
+      "json-server": "^1.0.0-beta.15",
       "nodemon": "^3.1.14",
       "nunjucks": "^3.2.4"
    }
